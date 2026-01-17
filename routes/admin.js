@@ -56,7 +56,7 @@ adminRouter.post("/signin", async function(req, res) {
 
     // TODO: ideally password should be hashed, and hence you cant compare the user provided password and the database password
     const admin = await adminModel.findOne({ email });
-    const passwordMatch = bcrypt.compare(password, admin.password);
+    const passwordMatch = await bcrypt.compare(password, admin.password);
 
     if(!admin && !passwordMatch){
         return res.status(403).json({

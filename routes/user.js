@@ -59,7 +59,7 @@ userRouter.post("/signin",async function(req, res) {
         email: email,
     }); //[]
 
-    const passwordMatch = bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.password);
 
     if(!user && !passwordMatch){
         return res.status(403).json({

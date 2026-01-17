@@ -18,18 +18,23 @@ const { JWT_ADMIN_PASSWORD } = require("../config");
 // }
 
 function adminMiddleware(req, res, next) {
-    const token = req.headers.token;
-    const decoded = jwt.verify(token, JWT_ADMIN_PASSWORD);
+    const token = req.cookies.token;
 
-    if (decoded) {
-        req.userId = decoded.id;
-        next()
-    } else {
-        res.status(403).json({
-            message: "You are not signed in"
-        })
+    if(!token){
+        return res.status(403).json({
+            message: "Unauthorized"
+        });
     }
 
+    try {
+        const decoded = jwt.verify(token, JWT_ADMIN_PASSWORD);
+        req.userId = decoded.id;
+        next();
+    } catch (err) {
+        return res.status(403).json({
+            message: "Invalid or expired token"
+        });
+    }
 }
 
 module.exports = {
