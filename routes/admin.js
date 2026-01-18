@@ -91,19 +91,25 @@ adminRouter.post("/course", adminMiddleware, async function(req, res) {
 
     const { title, description, imageUrl, price } = req.body;
 
-    // creating a web3 saas in 6 hours
-    const course = await courseModel.create({
-        title: title, 
-        description: description, 
-        imageUrl: imageUrl, 
-        price: price, 
-        creatorId: adminId
-    })
-
-    res.json({
-        message: "Course created",
-        courseId: course._id
-    })
+    try {
+        const course = await courseModel.create({
+            title: title, 
+            description: description, 
+            imageUrl: imageUrl, 
+            price: price, 
+            creatorId: adminId
+        })
+    
+        res.json({
+            message: "Course created",
+            courseId: course._id
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "Something went wrong",
+            error: error.message
+        })
+    }
 })
 
 adminRouter.put("/course", adminMiddleware, async function(req, res) {
@@ -111,21 +117,26 @@ adminRouter.put("/course", adminMiddleware, async function(req, res) {
 
     const { title, description, imageUrl, price, courseId } = req.body;
 
-    // creating a web3 saas in 6 hours
-    const course = await courseModel.updateOne({
-        _id: courseId, 
-        creatorId: adminId 
-    }, {
-        title: title, 
-        description: description, 
-        imageUrl: imageUrl, 
-        price: price
-    })
-
-    res.json({
-        message: "Course updated",
-        courseId: course._id
-    })
+    try {
+        const course = await courseModel.updateOne({
+            _id: courseId, 
+            creatorId: adminId 
+        }, {
+            title: title, 
+            description: description, 
+            imageUrl: imageUrl, 
+            price: price
+        })
+    
+        res.json({
+            message: "Course updated",
+            courseId: course._id
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "Error updating course"
+        })
+    }
 })
 
 adminRouter.get("/course/bulk", adminMiddleware,async function(req, res) {
